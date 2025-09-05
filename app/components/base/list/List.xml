@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="List" extends="RowList">
+    <script type="text/brightscript" uri="./List.component.brs" />
+</component>

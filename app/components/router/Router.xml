@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="Router" extends="Group">
+    <interface>
+        <function name="getRouterConstants" />
+        <function name="navigateToPage" />
+    </interface>
+
+    <script type="text/brightscript" uri="./Router.constants.brs" />
+    <script type="text/brightscript" uri="./Router.component.brs" />
+</component>

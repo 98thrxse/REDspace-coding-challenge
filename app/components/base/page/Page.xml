@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="Page" extends="Group">
+    <interface>
+        <function name="update" />
+        <function name="destroy" />
+    </interface>
+
+    <script type="text/brightscript" uri="./Page.component.brs" />
+</component>
