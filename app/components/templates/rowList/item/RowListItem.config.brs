@@ -1,4 +1,4 @@
-function getListItemConfig(settings as object)
+function getRowListItemConfig(settings as object)
     font = settings.font
 
     style = {

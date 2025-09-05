@@ -8,7 +8,7 @@ function getHomePageConfig(settings as object)
     vertMargin = safetyMargins.vertical[screenSize]
 
     sizes = {
-        list: {
+        rowList: {
             FHD: {
                 numRows: 2
                 itemSpacing: [0, 80]
@@ -21,13 +21,13 @@ function getHomePageConfig(settings as object)
     }
 
     style = {
-        list: {
-            numRows: sizes.list[screenSize].numRows
+        rowList: {
+            numRows: sizes.rowList[screenSize].numRows
             translation: [horizMargin, vertMargin]
-            rowTitleComponentName: "ListLabel"
-            itemComponentName: "ListItem"
+            rowTitleComponentName: "RowListLabel"
+            itemComponentName: "RowListItem"
             itemSize: [uiResolution.width - horizMargin, 395]
-            itemSpacing: sizes.list[screenSize].itemSpacing
+            itemSpacing: sizes.rowList[screenSize].itemSpacing
             rowItemSpacing: [20, 0]
             rowItemSize: [[210, 295]]
             showRowLabel: [true]

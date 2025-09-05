@@ -1,5 +1,5 @@
 sub init()
-    m.config = getListLabelConfig({
+    m.config = getRowListLabelConfig({
         font: m.global.theme.font
     })
 

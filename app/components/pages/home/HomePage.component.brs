@@ -12,6 +12,7 @@ sub init()
 
     createFetchShowsTask()
 
+    m.rowList.observeFieldScoped("rowItemSelected", "onRowItemSelected")
     m.top.observeFieldScoped("focusedChild", "onFocusChanged")
 end sub
 
@@ -36,17 +37,30 @@ sub onFetchShowsTaskComplete(event as object)
             contentNode = createObject("roSGNode", "ContentNode")
             contentNode.update(content, true)
 
-            m.list.content = contentNode
+            m.rowList.content = contentNode
 
             m.global.overlay.visible = false
         end if
     end if
 end sub
 
+sub onRowItemSelected(event as object)
+    rowItemSelected = event.getData()
+
+    rowIndex = rowItemSelected[0]
+    itemIndex = rowItemSelected[1]
+
+    row = m.rowList.content.getChild(rowIndex)
+    item = row.getChild(itemIndex)
+
+    routerConstants = m.global.router.callFunc("getRouterConstants")
+    m.global.router.callFunc("navigateToPage", routerConstants.routes.details, item)
+end sub
+
 sub onFocusChanged()
     hasFocus = m.top.hasFocus()
-    if m.list <> invalid and hasFocus then
-        m.list.setFocus(true)
+    if m.rowList <> invalid and hasFocus then
+        m.rowList.setFocus(true)
     end if
 end sub
 

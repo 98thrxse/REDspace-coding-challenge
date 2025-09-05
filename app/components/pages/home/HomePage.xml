@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <component name="HomePage" extends="Page">
     <children>
-        <List id="list" />
+        <RowList id="rowList" />
     </children>
 
     <script type="text/brightscript" uri="./HomePage.config.brs" />
