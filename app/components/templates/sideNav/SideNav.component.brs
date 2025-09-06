@@ -53,16 +53,14 @@ sub onButtonSelected(event as object)
 end sub
 
 sub onFocusChanged()
-    m.hasFocus = m.top.hasFocus()
+    hasFocus = m.top.hasFocus()
     childCount = m.buttonGroup.getChildCount()
 
-    if childCount > 0 then
-        if m.hasFocus then
-            setWidth(true)
-            m.buttonGroup.getChild(m.index).setFocus(true)
-        else
-            setWidth(false)
-        end if
+    if childCount > 0 and hasFocus then
+        setWidth(true)
+        m.buttonGroup.getChild(m.index).setFocus(true)
+    else
+        setWidth(false)
     end if
 end sub
 
