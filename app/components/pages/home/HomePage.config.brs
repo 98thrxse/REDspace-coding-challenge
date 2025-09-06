@@ -4,7 +4,6 @@ function getHomePageConfig(settings as object)
     uiResolution = settings.uiResolution
     screenSize = uiResolution.name
 
-    horizMargin = safetyMargins.horizontal[screenSize]
     vertMargin = safetyMargins.vertical[screenSize]
 
     sizes = {
@@ -22,11 +21,11 @@ function getHomePageConfig(settings as object)
 
     style = {
         rowList: {
+            translation: [0, vertMargin]
             numRows: sizes.rowList[screenSize].numRows
-            translation: [horizMargin, vertMargin]
             rowTitleComponentName: "RowListLabel"
             itemComponentName: "RowListItem"
-            itemSize: [uiResolution.width - horizMargin, 395]
+            itemSize: [uiResolution.width, 395]
             itemSpacing: sizes.rowList[screenSize].itemSpacing
             rowItemSpacing: [20, 0]
             rowItemSize: [[210, 295]]
@@ -34,8 +33,8 @@ function getHomePageConfig(settings as object)
             rowFocusAnimationStyle: "floatingFocus"
             vertFocusAnimationStyle: "floatingFocus"
             itemClippingRect: [
-                - horizMargin
-                - vertMargin
+                0
+                -vertMargin
                 uiResolution.width
                 uiResolution.height
             ]

@@ -1,4 +1,5 @@
 sub init()
+    m.top.id = "PlayerPage"
     m.config = getPlayerPageConfig({
         uiResolution: m.global.deviceInfo.uiResolution
     })
@@ -9,6 +10,7 @@ sub init()
         m.[item.key].update(item.value)
     end for
 
+    m.global.router.callFunc("enableSideNav", m.top.id)
     m.top.observeFieldScoped("focusedChild", "onFocusChanged")
 end sub
 
@@ -19,9 +21,8 @@ sub onFocusChanged()
     end if
 end sub
 
-sub update(content as object)
+sub updateContent(content as object)
     m.content = content
-
     setVideo()
 end sub
 
@@ -69,8 +70,9 @@ function onKeyEvent(key as string, press as boolean) as boolean
 end function
 
 function handleKeyBack() as boolean
-    routerConstants = m.global.router.callFunc("getRouterConstants")
-    m.global.router.callFunc("navigateToPage", routerConstants.routes.details, m.content)
+    routes = m.global.router.callFunc("getRoutes")
+    details = routes.details
+    m.global.router.callFunc("navigateToPage", details.id, m.content)
 
     return true
 end function

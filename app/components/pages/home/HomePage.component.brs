@@ -1,19 +1,31 @@
 sub init()
+    m.top.id = "HomePage"
     m.config = getHomePageConfig({
         safetyMargins: m.global.theme.safetyMargins
         uiResolution: m.global.deviceInfo.uiResolution
     })
 
-    style = m.config.style
-    for each item in style.items()
+    m.style = m.config.style
+    for each item in m.style.items()
         m.[item.key] = m.top.findNode(item.key)
         m.[item.key].update(item.value)
     end for
 
-    createFetchShowsTask()
+    retrieveContent()
 
     m.rowList.observeFieldScoped("rowItemSelected", "onRowItemSelected")
     m.top.observeFieldScoped("focusedChild", "onFocusChanged")
+end sub
+
+sub retrieveContent()
+    cache = m.global.router.callFunc("loadFromCache", m.top.id)
+    if cache = invalid then
+        m.global.router.callFunc("enableOverlay", true)
+        createFetchShowsTask()
+    else
+        m.rowList.content = cache.content
+        m.global.router.callFunc("enableSideNav", m.top.id)
+    end if
 end sub
 
 sub createFetchShowsTask()
@@ -21,8 +33,6 @@ sub createFetchShowsTask()
     m.fetchShowsTask.functionName = "execute"
     m.fetchShowsTask.observeFieldScoped("response", "onFetchShowsTaskComplete")
     m.fetchShowsTask.control = "run"
-
-    m.global.overlay.visible = true
 end sub
 
 sub onFetchShowsTaskComplete(event as object)
@@ -38,10 +48,16 @@ sub onFetchShowsTaskComplete(event as object)
             contentNode.update(content, true)
 
             m.rowList.content = contentNode
-
-            m.global.overlay.visible = false
+            m.global.router.callFunc("saveToCache", m.top.id, contentNode)
+            
+            m.global.router.callFunc("enableOverlay", false)
+            m.global.router.callFunc("enableSideNav", m.top.id)
         end if
     end if
+end sub
+
+sub updateSafetyRegion(horizMargin as integer)
+    m.rowList.itemSize = [m.style.rowList.itemSize[0] - horizMargin, m.rowList.itemSize[1]]
 end sub
 
 sub onRowItemSelected(event as object)
@@ -53,8 +69,9 @@ sub onRowItemSelected(event as object)
     row = m.rowList.content.getChild(rowIndex)
     item = row.getChild(itemIndex)
 
-    routerConstants = m.global.router.callFunc("getRouterConstants")
-    m.global.router.callFunc("navigateToPage", routerConstants.routes.details, item)
+    routes = m.global.router.callFunc("getRoutes")
+    details = routes.details
+    m.global.router.callFunc("navigateToPage", details.id, item)
 end sub
 
 sub onFocusChanged()

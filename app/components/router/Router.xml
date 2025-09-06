@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <component name="Router" extends="Group">
     <interface>
-        <function name="getRouterConstants" />
+        <function name="enableOverlay" />
+        <function name="enableSideNav" />
+
+        <function name="loadFromCache" />
+        <function name="saveToCache" />
+
+        <function name="getRoutes" />
         <function name="navigateToPage" />
+        <function name="setup" />
     </interface>
 
-    <script type="text/brightscript" uri="./Router.constants.brs" />
+    <script type="text/brightscript" uri="./Router.config.brs" />
+    <script type="text/brightscript" uri="./Router.utils.brs" />
     <script type="text/brightscript" uri="./Router.component.brs" />
 </component>

@@ -1,30 +1,79 @@
-sub navigateToPage(pageName as string, data = {} as object)
+sub setup()
+    m.routes = getRoutes()
+    m.cache = {}
+
+    m.uiResolution = m.global.deviceInfo.uiResolution
+    m.safetyMargins = m.global.theme.safetyMargins
+
+    _createSideNav()
+    _createOverlay()
+
+    home = m.routes.home
+    navigateToPage(home.id)
+end sub
+
+sub navigateToPage(pageName as string, content = {} as object)
     _destroyPage()
-    _createPage(pageName, data)
+    _createPage(pageName, content)
+    _onSideNavWidthChanged()
 end sub
 
-sub _destroyPage()
-    if _isValidPage() then
-        page = _getPage()
-        page.callFunc("destroy")
-
-        m.top.removeChild(page)
-        page = invalid
-    end if
+sub enableOverlay(visible as boolean)
+    m.overlay.visible = visible
 end sub
 
-sub _createPage(pageName as string, data = {} as object)
-    page = createObject("roSGNode", pageName)
-    page.callFunc("update", data)
-
-    m.top.appendChild(page)
-    page.setFocus(true)
+sub enableSideNav(id as string)
+    for each route in m.routes.items()
+        value = route.value
+        if value.id = id then
+            sideNav = value.sideNav
+            m.sideNav.visible = sideNav.enabled
+        end if
+    end for
 end sub
 
-function _getPage() as object
-    return m.top.getChild(0)
+sub saveToCache(id as string, content as object)
+    m.cache[id] = { content: content }
+end sub
+
+function loadFromCache(id as string) as object
+    return m.cache[id]
 end function
 
-function _isValidPage() as boolean
-    return _getPage() <> invalid
+function onKeyEvent(key as string, press as boolean) as boolean
+    handled = false
+
+    if not press then
+        return handled
+    end if
+
+    if key = "back" then
+        handled = handleKeyBack()
+    else if key = "left" then
+        handled = handleKeyLeft()
+    else if key = "right" then
+        handled = handleKeyRight()
+    end if
+
+    return handled
+end function
+
+function handleKeyBack() as boolean
+    return true
+end function
+
+function handleKeyLeft() as boolean
+    if m.sideNav.visible and m.page.isInFocusChain() then
+        m.sideNav.setFocus(true)
+    end if
+
+    return true
+end function
+
+function handleKeyRight() as boolean
+    if m.page.visible and m.sideNav.isInFocusChain() then
+        m.page.setFocus(true)
+    end if
+
+    return true
 end function

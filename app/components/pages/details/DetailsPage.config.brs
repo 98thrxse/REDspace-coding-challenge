@@ -6,6 +6,7 @@ function getDetailsConfig(settings as object)
     screenSize = uiResolution.name
 
     horizMargin = safetyMargins.horizontal[screenSize]
+    vertMargin = safetyMargins.vertical[screenSize]
 
     sizes = {
         container: {
@@ -44,11 +45,13 @@ function getDetailsConfig(settings as object)
         }
     }
 
+    textWidth = uiResolution.width - horizMargin - sizes.image[screenSize].width - sizes.container[screenSize].itemSpacings[0]
+
     style = {
         container: {
             layoutDirection: "horiz"
             itemSpacings: sizes.container[screenSize].itemSpacings
-            translation: [horizMargin, uiResolution.height / 2]
+            translation: [0, uiResolution.height / 2 - vertMargin]
             vertAlignment: "center"
         }
         image: {
@@ -62,25 +65,27 @@ function getDetailsConfig(settings as object)
             itemSpacings: sizes.textGroup[screenSize].itemSpacings
         }
         title: {
-            width: uiResolution.width - horizMargin * 2 - sizes.image[screenSize].width - sizes.container[screenSize].itemSpacings[0]
+            width: textWidth
             font: font.largeBold
         }
         averageRating: {
-            width: uiResolution.width - horizMargin * 2 - sizes.image[screenSize].width - sizes.container[screenSize].itemSpacings[0]
+            width: textWidth
             font: font.medium
         }
         summary: {
-            width: uiResolution.width - horizMargin * 2 - sizes.image[screenSize].width - sizes.container[screenSize].itemSpacings[0]
+            width: textWidth
             wrap: true
             font: font.smallest
         }
         genres: {
-            width: uiResolution.width - horizMargin * 2 - sizes.image[screenSize].width - sizes.container[screenSize].itemSpacings[0]
+            width: textWidth
             font: font.smallestBold
         }
         buttonGroup: {
             layoutDirection: "horiz"
             itemSpacings: sizes.buttonGroup[screenSize].itemSpacings
+            maxWidth: textWidth
+            minWidth: textWidth
         }
         playButton: {
             text: "Play"

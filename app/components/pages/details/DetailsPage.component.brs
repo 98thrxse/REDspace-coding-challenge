@@ -1,4 +1,6 @@
 sub init()
+    m.top.id = "DetailsPage"
+    m.routes = m.global.router.callFunc("getRoutes")
     m.config = getDetailsConfig({
         font: m.global.theme.font
         safetyMargins: m.global.theme.safetyMargins
@@ -12,21 +14,31 @@ sub init()
     end for
 
     m.index = 0
+    m.global.router.callFunc("enableSideNav", m.top.id)
     m.top.observeFieldScoped("focusedChild", "onFocusChanged")
 end sub
 
 sub onFocusChanged()
     hasFocus = m.top.hasFocus()
-    if m.playButton <> invalid and hasFocus then
+    childCount = m.buttonGroup.getChildCount()
+    
+    if childCount > 0 and hasFocus then
         m.buttonGroup.getChild(m.index).setFocus(true)
     end if
 end sub
 
-sub update(content as object)
+sub updateContent(content as object)
     m.content = content
 
     setImage()
     setTextGroup()
+end sub
+
+sub updateSafetyRegion(horizMargin as integer)
+    m.title.width = m.style.title.width - horizMargin
+    m.summary.width = m.style.summary.width - horizMargin
+    m.averageRating.width = m.style.averageRating.width - horizMargin
+    m.genres.width = m.style.genres.width - horizMargin
 end sub
 
 sub setImage()
@@ -84,14 +96,14 @@ sub setGenres()
         m.genres = createObject("roSGNode", "Label")
         m.genres.update(m.style.genres)
         for each genre in genres
-            m.genres.text += ("•" + genre + " ")
+            m.genres.text += ("•" + genre + chr(32))
         end for
         m.textGroup.appendChild(m.genres)
     end if
 end sub
 
 sub setButtonGroup()
-    m.buttonGroup = createObject("roSGNode", "LayoutGroup")
+    m.buttonGroup = createObject("roSGNode", "ButtonGroup")
     m.buttonGroup.update(m.style.buttonGroup)
     m.textGroup.appendChild(m.buttonGroup)
 
@@ -114,13 +126,13 @@ sub setBackButton()
 end sub
 
 sub onPlayButtonSelected()
-    routerConstants = m.global.router.callFunc("getRouterConstants")
-    m.global.router.callFunc("navigateToPage", routerConstants.routes.player, m.content)
+    player = m.routes.player
+    m.global.router.callFunc("navigateToPage", player.id, m.content)
 end sub
 
 sub onBackButtonSelected()
-    routerConstants = m.global.router.callFunc("getRouterConstants")
-    m.global.router.callFunc("navigateToPage", routerConstants.routes.home)
+    home = m.routes.home
+    m.global.router.callFunc("navigateToPage", home.id)
 end sub
 
 sub destroy()
@@ -155,21 +167,27 @@ function onKeyEvent(key as string, press as boolean) as boolean
 end function
 
 function handleKeyLeft() as boolean
-    if m.index > 0 then
+    childCount = m.buttonGroup.getChildCount()
+
+    if childCount > 0 and m.index > 0 then
         m.index--
         m.buttonGroup.getChild(m.index).setFocus(true)
+        return true
     end if
 
-    return true
+    return false
 end function
 
 function handleKeyRight() as boolean
-    if m.index < m.buttonGroup.getChildCount() - 1 then
+    childCount = m.buttonGroup.getChildCount()
+
+    if childCount > 0 and m.index < childCount - 1 then
         m.index++
         m.buttonGroup.getChild(m.index).setFocus(true)
+        return true
     end if
 
-    return true
+    return false
 end function
 
 function handleKeyBack() as boolean
