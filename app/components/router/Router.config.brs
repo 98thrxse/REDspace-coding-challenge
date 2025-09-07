@@ -24,5 +24,13 @@ function getRoutes() as object
                 enabled: false
             }
         }
+        search: {
+            name: "Search"
+            id: "SearchPage"
+            sideNav: {
+                listed: true
+                enabled: true
+            }
+        }
     }
 end function

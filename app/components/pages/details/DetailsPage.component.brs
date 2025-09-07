@@ -13,7 +13,6 @@ sub init()
         if m.[item.key] <> invalid then m.[item.key].update(item.value)
     end for
 
-    m.index = 0
     m.global.router.callFunc("enableSideNav", m.top.id)
     m.top.observeFieldScoped("focusedChild", "onFocusChanged")
 end sub
@@ -21,9 +20,10 @@ end sub
 sub onFocusChanged()
     hasFocus = m.top.hasFocus()
     childCount = m.buttonGroup.getChildCount()
-    
+
     if childCount > 0 and hasFocus then
-        m.buttonGroup.getChild(m.index).setFocus(true)
+        buttonFocused = m.buttonGroup.buttonFocused
+        m.buttonGroup.getChild(buttonFocused).setFocus(true)
     end if
 end sub
 
@@ -168,10 +168,11 @@ end function
 
 function handleKeyLeft() as boolean
     childCount = m.buttonGroup.getChildCount()
+    buttonFocused = m.buttonGroup.buttonFocused
 
-    if childCount > 0 and m.index > 0 then
-        m.index--
-        m.buttonGroup.getChild(m.index).setFocus(true)
+    if childCount > 0 and buttonFocused > 0 then
+        buttonFocused--
+        m.buttonGroup.getChild(buttonFocused).setFocus(true)
         return true
     end if
 
@@ -180,10 +181,11 @@ end function
 
 function handleKeyRight() as boolean
     childCount = m.buttonGroup.getChildCount()
+    buttonFocused = m.buttonGroup.buttonFocused
 
-    if childCount > 0 and m.index < childCount - 1 then
-        m.index++
-        m.buttonGroup.getChild(m.index).setFocus(true)
+    if childCount > 0 and buttonFocused < childCount - 1 then
+        buttonFocused++
+        m.buttonGroup.getChild(buttonFocused).setFocus(true)
         return true
     end if
 

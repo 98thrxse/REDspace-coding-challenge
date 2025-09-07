@@ -15,7 +15,6 @@ sub init()
     setButtonGroup()
     setWidth()
 
-    m.index = 0
     m.top.observeFieldScoped("focusedChild", "onFocusChanged")
 end sub
 
@@ -53,12 +52,13 @@ sub onButtonSelected(event as object)
 end sub
 
 sub onFocusChanged()
-    hasFocus = m.top.hasFocus()
+    isInFocusChain = m.top.isInFocusChain()
     childCount = m.buttonGroup.getChildCount()
 
-    if childCount > 0 and hasFocus then
+    if childCount > 0 and isInFocusChain then
         setWidth(true)
-        m.buttonGroup.getChild(m.index).setFocus(true)
+        buttonFocused = m.buttonGroup.buttonFocused
+        m.buttonGroup.getChild(buttonFocused).setFocus(true)
     else
         setWidth(false)
     end if
