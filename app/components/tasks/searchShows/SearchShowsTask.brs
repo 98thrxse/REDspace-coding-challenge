@@ -1,11 +1,13 @@
 sub execute()
     env = m.global.env
     config = getAPIConfig()
+    request = m.top.request
 
     base = config[env].base
-    shows = config[env].paths.shows
+    search = config[env].paths.search
+    text = request.text
 
-    url = base + shows
+    url = base + search + text
     headers = { "Accept": "application/json" }
 
     rawResponse = makeGetRequest(url, headers)
@@ -13,7 +15,7 @@ sub execute()
     if not rawResponse.isEmpty() then
         jsonResponse = parseJson(rawResponse)
         if jsonResponse <> invalid then
-            response = _sortByGenre(jsonResponse)
+            response = _sortInOneRow(jsonResponse)
             m.top.response = response
         else
             m.top.response = {
@@ -23,15 +25,12 @@ sub execute()
     end if
 end sub
 
-function _sortByGenre(shows as object) as object
+function _sortInOneRow(shows as object) as object
     data = {}
-    map = {}
+    items = []
 
-    for each show in shows
-        genres = ["Others"]
-        if show.doesExist("genres") and show.genres.count() > 0 then
-            genres = show.genres
-        end if
+    for each item in shows
+        show = item.show
 
         image = {}
         if show.doesExist("image") and show.image <> invalid then
@@ -63,44 +62,31 @@ function _sortByGenre(shows as object) as object
             summary = show.summary
         end if
 
-        for each genre in genres
-            if not map.doesExist(genre) then
-                map[genre] = []
-            end if
+        item = {
+            type: "ContentNode"
+            title: title
+            summary: summary
+            genres: genres
+            image: image
+            averageRating: averageRating
+            video: _pickRandomVideo()
+        }
 
-            item = {
-                type: "ContentNode"
-                title: title
-                summary: summary
-                genres: genres
-                image: image
-                averageRating: averageRating
-                video: _pickRandomVideo()
-            }
-            map[genre].push(item)
-        end for
+        items.push(item)
     end for
+
+    row = {
+        type: "ContentNode"
+        title: "Results"
+        children: items
+    }
 
     content = {
         type: "ContentNode"
-        children: []
+        children: [row]
     }
 
-    showRowLabel = []
-    for each key in map.keys()
-        hasTitle = key <> invalid and not key.isEmpty()
-        showRowLabel.push(hasTitle)
-
-        row = {
-            type: "ContentNode"
-            title: key
-            children: map[key]
-        }
-        content.children.push(row)
-    end for
-
     data.content = content
-    data.showRowLabel = showRowLabel
 
     return data
 end function

@@ -23,7 +23,10 @@ sub retrieveContent()
         m.global.router.callFunc("enableOverlay", true)
         createFetchShowsTask()
     else
-        m.rowList.content = cache.content
+        m.rowList.update({
+            content: cache.content
+            showRowLabel: cache.showRowLabel
+        })
         m.global.router.callFunc("enableSideNav", m.top.id)
     end if
 end sub
@@ -41,17 +44,26 @@ sub onFetchShowsTaskComplete(event as object)
         m.fetchShowsTask.control = "stop"
     end if
 
-    content = event.getData()
-    if content <> invalid then
-        if not content.doesExist("error") then
-            contentNode = createObject("roSGNode", "ContentNode")
-            contentNode.update(content, true)
+    data = event.getData()
+    if data <> invalid then
+        content = data.content
+        showRowLabel = data.showRowLabel
 
-            m.rowList.content = contentNode
-            m.global.router.callFunc("saveToCache", m.top.id, contentNode)
-            
-            m.global.router.callFunc("enableOverlay", false)
-            m.global.router.callFunc("enableSideNav", m.top.id)
+        if content <> invalid then
+            if not content.doesExist("error") then
+                contentNode = createObject("roSGNode", "ContentNode")
+                contentNode.update(content, true)
+
+                m.rowList.update({
+                    content: contentNode
+                    showRowLabel: showRowLabel
+                })
+
+                m.global.router.callFunc("saveToCache", m.top.id, { content: contentNode, showRowLabel: showRowLabel })
+
+                m.global.router.callFunc("enableOverlay", false)
+                m.global.router.callFunc("enableSideNav", m.top.id)
+            end if
         end if
     end if
 end sub

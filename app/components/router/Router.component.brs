@@ -32,8 +32,8 @@ sub enableSideNav(id as string)
     end for
 end sub
 
-sub saveToCache(id as string, content as object)
-    m.cache[id] = { content: content }
+sub saveToCache(id as string, data as object)
+    m.cache[id] = data
 end sub
 
 function loadFromCache(id as string) as object

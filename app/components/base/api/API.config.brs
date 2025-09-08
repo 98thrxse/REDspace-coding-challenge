@@ -4,6 +4,7 @@ function getAPIConfig()
             base: "https://api.tvmaze.com/"
             paths: {
                 shows: "shows"
+                search: "search/shows?q="
             }
         }
         requests: 3

@@ -21,7 +21,6 @@ function getHomePageConfig(settings as object)
 
     style = {
         rowList: {
-            translation: [0, vertMargin]
             numRows: sizes.rowList[screenSize].numRows
             rowTitleComponentName: "RowListLabel"
             itemComponentName: "RowListItem"
@@ -29,7 +28,6 @@ function getHomePageConfig(settings as object)
             itemSpacing: sizes.rowList[screenSize].itemSpacing
             rowItemSpacing: [20, 0]
             rowItemSize: [[210, 295]]
-            showRowLabel: [true]
             rowFocusAnimationStyle: "floatingFocus"
             vertFocusAnimationStyle: "floatingFocus"
             itemClippingRect: [

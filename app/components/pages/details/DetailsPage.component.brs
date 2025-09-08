@@ -35,10 +35,10 @@ sub updateContent(content as object)
 end sub
 
 sub updateSafetyRegion(horizMargin as integer)
-    m.title.width = m.style.title.width - horizMargin
-    m.summary.width = m.style.summary.width - horizMargin
-    m.averageRating.width = m.style.averageRating.width - horizMargin
-    m.genres.width = m.style.genres.width - horizMargin
+    if m.title <> invalid then m.title.width = m.style.title.width - horizMargin
+    if m.summary <> invalid then m.summary.width = m.style.summary.width - horizMargin
+    if m.averageRating <> invalid then m.averageRating.width = m.style.averageRating.width - horizMargin
+    if m.genres <> invalid then m.genres.width = m.style.genres.width - horizMargin
 end sub
 
 sub setImage()

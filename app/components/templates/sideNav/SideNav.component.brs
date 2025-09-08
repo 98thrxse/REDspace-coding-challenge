@@ -65,4 +65,11 @@ sub onFocusChanged()
 end sub
 
 sub destroy()
+    m.top.unobserveFieldScoped("focusedChild")
+
+    children = m.top.getChildren(-1, 0)
+    for each item in children
+        m.top.removeChild(item)
+        item = invalid
+    end for
 end sub
